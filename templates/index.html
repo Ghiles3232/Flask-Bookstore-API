@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reviews</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Reviews</h1>
+
+    <h2>Book List</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Summary</th>
+                <th>Genre</th>
+            </tr>
+        </thead>
+        <tbody id="book-list">
+           
+        </tbody>
+    </table>
+
+    <h2>Book Details & Reviews</h2>
+    <div id="book-details">
+       
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Fetch and display the list of books
+            fetch('/books')
+                .then(response => response.json())
+                .then(data => {
+                    const bookList = document.getElementById('book-list');
+
+                    data.books.forEach(book => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${book.id}</td>
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.summary}</td>
+                            <td>${book.genre}</td>
+                            <td><button onclick="showBookDetails(${book.id})">Details</button></td>
+                        `;
+                        bookList.appendChild(row);
+                    });
+                })
+                .catch(error => console.error('Error:', error));
+        });
+
+        // Function to fetch and display book details and reviews
+        function showBookDetails(bookId) {
+            fetch(`/books/${bookId}`)
+                .then(response => response.json())
+                .then(data => {
+                    const bookDetails = document.getElementById('book-details');
+                    bookDetails.innerHTML = `
+                        <h3>${data.book.title}</h3>
+                        <p><strong>Author:</strong> ${data.book.author}</p>
+                        <p><strong>Summary:</strong> ${data.book.summary}</p>
+                        <p><strong>Genre:</strong> ${data.book.genre}</p>
+                        
+                        <h4>Reviews</h4>
+                        <ul>
+                            ${data.reviews.map(review => `<li>${review.user} - Rating: ${review.rating}, Comment: ${review.comment}</li>`).join('')}
+                        </ul>
+                    `;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>

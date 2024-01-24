@@ -1,0 +1,7 @@
+#GET  http://127.0.0.1:5000/books + SELECT GET för att få lista på alla böcker
+
+#POST http://127.0.0.1:5000/books + body + raw + JSON för att adda en ny book
+
+#GET http://127.0.0.1:5000/books/"book id"  to get a book with his ID
+
+#PUT http://127.0.0.1:5000/books/"book ID"  to update a book based on his ID
